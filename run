@@ -1,0 +1,5 @@
+g++ character.cpp -c
+g++ main.cpp -c 
+g++ aksesoris.cpp -c
+g++ main.o character.o aksesoris.o -o RunmanAdventure -lsfml-graphics -lsfml-window -lsfml-system
+./RunmanAdventure
