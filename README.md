@@ -1,2 +1,0 @@
-# Proglan
-coding proglan
