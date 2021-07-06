@@ -1,0 +1,8 @@
+g++ Character.cpp -c
+g++ main.cpp -c 
+g++ Coin.cpp -c
+g++ Obstacle.cpp -c
+g++ Item.cpp -c
+g++ GameFunction.cpp -c
+g++ main.o Character.o Coin.o Obstacle.o Item.o GameFunction.o -o RunmanAdventure -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+./RunmanAdventure

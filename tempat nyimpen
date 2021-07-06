@@ -1,0 +1,158 @@
+#include "Character.h"
+
+/* Character */
+
+Character::Character(sf::Texture *texture, sf::Vector2u imgCount, float switchTime)
+{
+    this->imgCount = imgCount;
+    this->switchTime = switchTime;
+    totalTime = 0.0f;
+    currentImg.x = 0;
+
+    spriteRect.width = texture->getSize().x / float(imgCount.x);
+    spriteRect.height = texture->getSize().y / float(imgCount.y);
+}
+
+Character::~Character()
+{
+}
+
+void Character::Update(int row, float deltaTime)
+{
+    currentImg.y = row;
+    totalTime += deltaTime;
+
+    if(totalTime >= switchTime)
+    {
+        totalTime -= switchTime;
+        currentImg.x++;
+        
+        if(currentImg.x >= imgCount.x)
+            currentImg.x = 0;
+    }
+
+    spriteRect.left = currentImg.x * spriteRect.width;
+    spriteRect.top = currentImg.y * spriteRect.height;
+}
+
+/* Player */
+
+Player::Player(sf::Texture *texture, sf::Vector2u imgCount, float switchTime, float speed, float jumpHeight) :
+    animation(texture, imgCount, switchTime)
+{
+    this->xp =xp;
+    this->yp = yp;
+    this->speed = speed;
+    row = 0;
+
+    body.setSize(sf::Vector2f(150, 150));
+    body.setPosition(xp,yp);
+    body.setTexture(texture);
+}
+
+Player::~Player(){
+
+}
+
+void Player::playerMovement(float deltaTime)
+{
+    sf::Vector2f movement(0.0f, 0.0f);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+        movement.y -= speed * deltaTime;
+        row = 1;
+    }else if(movement.y == 0){
+        row = 0;
+    }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+        movement.y += speed * deltaTime;
+        row = 2;
+    }else if(movement.y == 0){
+        row = 0;
+    }
+
+    animation.Update(row, deltaTime);
+    body.setTextureRect(animation.spriteRect);
+    body.move(movement);
+}
+
+void Player::setPosition(float xp, float yp)
+{
+    this->xp = xp;
+    this->yp = yp;
+}
+
+void Player::draw(sf::RenderWindow *window)
+{
+    window->draw(body);
+}
+
+float Player::GetX(){
+    return this->xp;
+}
+
+float Player::GetY(){
+    return this->yp;
+}
+
+
+isi Character.h
+
+#ifndef CHARACTER_H
+#define CHARACTER_H
+#include <SFML/Graphics.hpp>
+#include <cmath>
+#include "Collider.h"
+
+class Character{
+public:
+
+        Character(sf::Texture *texture, sf::Vector2u imgCount, float switchTime);
+        ~Character();
+        void Update(int row, float deltaTime);
+
+        sf::IntRect spriteRect;
+
+private:
+        
+        sf::CircleShape head, body;
+        sf::RenderWindow *window;
+
+        sf::Vector2u imgCount;
+        sf::Vector2u currentImg;
+
+        float totalTime;
+        float switchTime;
+};
+
+class Player{
+
+public:
+        Player(sf::Texture *texture, sf::Vector2u imgCount, float switchTime, float speed, float jumpHeight);
+        ~Player();
+
+        void playerMovement(float deltaTime);
+        void setPosition(float xp,float yp);
+        void draw(sf::RenderWindow *window);
+        void onGround(sf::Vector2f direction);
+        float GetX();
+        float GetY();
+
+        sf::Vector2f GetPosition() { return body.getPosition(); }
+        Collider getCollision() { return Collider(body); }
+
+private:
+
+        float xp = 100, yp = 360;
+        sf::RectangleShape body;
+        Character animation;
+        unsigned int row;
+        float speed;
+        bool isJumping, isSliding;
+
+        sf::Vector2f velocity;
+        float jumpHeight;
+};
+
+#endif
