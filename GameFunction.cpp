@@ -547,7 +547,7 @@ void Game::levelOne(sf::RenderWindow *window)
                 break;
             }
         }
-        if (Keyboard::isKeyPressed(Keyboard::Down) && score == 3)
+        if (Keyboard::isKeyPressed(Keyboard::Down) && score > 3)
         {
             player.setSlide(true);
             player.ModelSliding();
@@ -759,7 +759,7 @@ void Game::levelTwo(sf::RenderWindow *window)
             player.setSlide(true);
             player.ModelSliding();
         }
-        else if (!Keyboard::isKeyPressed(Keyboard::Down) && score == 3)
+        else if (!Keyboard::isKeyPressed(Keyboard::Down) && score > 3)
         {
             player.setSlide(false);
         }
